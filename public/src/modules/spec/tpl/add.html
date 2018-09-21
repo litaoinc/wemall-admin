@@ -1,0 +1,36 @@
+<ion-view view-title="添加规格">
+	<ion-content ng-class="{'no-footer': tabsHidden}">
+		<form name="form" ng-submit="vm.submitForm(form.$valid)" novalidate>
+			<div class="weui-cells weui-cells_form">
+		        <div class="weui-cell">
+		            <div class="weui-cell__hd">
+		            	<label class="weui-label">名称</label>
+		            </div>
+		            <div class="weui-cell__bd">
+		                <input name="name" class="weui-input" type="text" placeholder="名称" ng-model="vm.form.name" required>
+		            </div>
+		        </div>
+
+				<div class="weui-cells__title">规格参数</div>
+				<ion-list>
+					<ion-item ng-repeat="item in vm.specparams">
+						<h2>{{ item.name }}</h2>
+						<ion-option-button class="button-assertive icon ion-close" on-tap="vm.onPull(item)"></ion-option-button>
+					</ion-item>
+					<ion-item>
+						<h2 class="text-center" on-tap="vm.modal.open()"><i class="fa fa-plus"></i></h2>
+					</ion-item>
+				</ion-list>
+
+		        <div class="weui-cell">
+		            <div class="weui-cell__bd">
+		                <textarea name="remark" class="weui-textarea" placeholder="简介" rows="6" ng-model="vm.form.remark" required></textarea>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="weui-btn-area">
+		        <button type="submit" class="weui-btn weui-btn_primary">保存</button>
+		    </div>
+	    </form>
+	</ion-content>
+</ion-view>

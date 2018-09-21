@@ -4,7 +4,7 @@ class Ctrl{
 	constructor(app) {
 		Object.assign(this, {
 			app, 
-			model: proxy.goods, 
+			model: proxy.spec,
 		})
 
 		this.init()
@@ -21,13 +21,11 @@ class Ctrl{
 	 * 注册路由
 	 */
 	routes() {
-		this.app.get('/api/goods', this.getAll.bind(this))
-		this.app.get('/api/goods/:id', this.get.bind(this))
-		this.app.post('/api/goods', this.post.bind(this))
-		this.app.put('/api/goods/:id', this.put.bind(this))
-		this.app.delete('/api/goods/:id', this.delete.bind(this))
-		this.app.get('/api/goods/search/all', this.search.bind(this))
-		this.app.get('/api/goods/classify/:id',this.classify.bind(this))
+		this.app.get('/api/spec', this.getAll.bind(this))
+		this.app.get('/api/spec/:id', this.get.bind(this))
+		this.app.post('/api/spec', this.post.bind(this))
+		this.app.put('/api/spec/:id', this.put.bind(this))
+		this.app.delete('/api/spec/:id', this.delete.bind(this))
 	}
 
 	/**
@@ -44,16 +42,16 @@ class Ctrl{
 	 */
 	
 	/**
-	 * @api {get} /goods 列出所有资源
+	 * @api {get} /classify 列出所有资源
 	 * @apiDescription 列出所有资源
 	 * @apiName getAll
-	 * @apiGroup goods
+	 * @apiGroup classify
 	 * 
 	 * @apiParam {String} [page=1] 指定第几页
 	 * @apiParam {String} [limit=10] 指定每页的记录数
 	 *
 	 * @apiPermission none
-	 * @apiSampleRequest /goods
+	 * @apiSampleRequest /classify
 	 * 
 	 * @apiUse Header
 	 * @apiUse Success
@@ -68,10 +66,7 @@ class Ctrl{
 	 *       "data": [{
 	 *       	"_id": "_id",
 	 *       	"name": "name",
-	 *       	"price": "price",
 	 *       	"remark": "remark",
-	 *       	"images": "images",
-	 *       	"types": "types",
 	 *       	"create_at": "create_at",
 	 *       	"update_at": "update_at"
 	 *       }]
@@ -80,53 +75,36 @@ class Ctrl{
 	getAll(req, res, next) {
 		const query = {}
 
-		const opts = {
-			page : req.query.page, 
-			limit: req.query.limit
-		}
-
-		if (req.query.type) {
-			query.types = req.query.type
-		}
-
-		if (req.query.keyword) {
-			query.name = req.query.keyword
-		}
-
-		const params = {
-			query  : query, 
-			fields : {}, 
-			options: opts, 
-		}
+		const fields = {}
 
 		const options = {
-			path    : 'types', 
-			select  : {}, 
+			page : req.query.page, 
+			limit: req.query.limit, 
 		}
 
 		Promise.all([
 			this.model.countAsync(query), 
-			this.model.findAndPopulateAsync(params, options), 
+			this.model.getAll(query, fields, options), 
 		])
 		.then(docs => {
 			res.tools.setJson(0, '调用成功', {
 				items   : docs[1], 
-				paginate: res.paginate(Number(opts.page), Number(opts.limit), docs[0]), 
+				paginate: res.paginate(Number(options.page), Number(options.limit), docs[0]), 
 			})
 		})
 		.catch(err => next(err))
 	}
 	
 	/**
-	 * @api {get} /goods/:id 获取某个指定资源的信息
+	 * @api {get} /classify/:id 获取某个指定资源的信息
 	 * @apiDescription 获取某个指定资源的信息
 	 * @apiName get
-	 * @apiGroup goods
+	 * @apiGroup classify
 	 *
 	 * @apiParam {String} id 资源ID
 	 *
 	 * @apiPermission none
-	 * @apiSampleRequest /goods/:id
+	 * @apiSampleRequest /classify/:id
 	 * 
 	 * @apiUse Header
 	 * @apiUse Success
@@ -141,30 +119,20 @@ class Ctrl{
 	 *       "data": {
 	 *       	"_id": "_id",
 	 *       	"name": "name",
-	 *       	"price": "price",
 	 *       	"remark": "remark",
-	 *       	"images": "images",
-	 *       	"types": "types",
 	 *       	"create_at": "create_at",
 	 *       	"update_at": "update_at"
 	 *       }
 	 *     }
 	 */
 	get(req, res, next) {
-		const params = {
-			query  : {
-				_id: req.params.id
-			},
-			fields : {}, 
-			options: {}, 
+		const query = {
+			_id: req.params.id
 		}
 
-		const options = {
-			path    : 'types', 
-			select  : {}, 
-		}
+		const fields = {}
 
-		this.model.findOneAndPopulateAsync(params, options)
+		this.model.get(query, fields)
 		.then(doc => {
 			if (!doc) return res.tools.setJson(1, '资源不存在或已删除')
 			return res.tools.setJson(0, '调用成功', doc)
@@ -173,22 +141,16 @@ class Ctrl{
 	}
 
 	/**
-	 * @api {post} /goods 新建一个资源
+	 * @api {post} /classify 新建一个资源
 	 * @apiDescription 新建一个资源
 	 * @apiName post
-	 * @apiGroup goods
+	 * @apiGroup classify
 	 *
-	 * @apiParam {String} name 名称
-	 * @apiParam {String} thumbnail 缩略图
-	 * @apiParam {Number} price 价格
-	 * @apiParam {Number} stock 库存量
-	 * @apiParam {Array}  spec 规格
-	 * @apiParam {String} remark 简介
-	 * @apiParam {Array} images 图片
-	 * @apiParam {Array} types 分类
+	 * @apiParam {String} name 标题
+	 * @apiParam {String} remark 内容
 	 *
 	 * @apiPermission none
-	 * @apiSampleRequest /goods
+	 * @apiSampleRequest /classify
 	 * 
 	 * @apiUse Header
 	 * @apiUse Success
@@ -207,14 +169,8 @@ class Ctrl{
 	 */
 	post(req, res, next) {
 		const body = {
-			name  : req.body.name,
-			thumb : req.body.thumb,
-			price : req.body.price,
-			stock : req.body.stock,
-			spec  : req.body.spec,
+			name  : req.body.name, 
 			remark: req.body.remark, 
-			images: req.body.images, 
-			types : req.body.types, 
 		}
 
 		this.model.post(body)
@@ -223,20 +179,17 @@ class Ctrl{
 	}
 
 	/**
-	 * @api {put} /goods/:id 更新某个指定资源的信息
+	 * @api {put} /classify/:id 更新某个指定资源的信息
 	 * @apiDescription 更新某个指定资源的信息
 	 * @apiName put
-	 * @apiGroup goods
+	 * @apiGroup classify
 	 *
 	 * @apiParam {String} id 资源ID
-	 * @apiParam {String} [name] 名称
-	 * @apiParam {String} [price] 价格
-	 * @apiParam {String} [remark] 简介
-	 * @apiParam {Array} [images] 图片
-	 * @apiParam {Array} [types] 分类
+	 * @apiParam {String} [name] 标题
+	 * @apiParam {String} [remark] 内容
 	 *
 	 * @apiPermission none
-	 * @apiSampleRequest /goods/:id
+	 * @apiSampleRequest /classify/:id
 	 * 
 	 * @apiUse Header
 	 * @apiUse Success
@@ -251,10 +204,7 @@ class Ctrl{
 	 *       "data": {
 	 *       	"_id": "_id",
 	 *       	"name": "name",
-	 *       	"price": "price",
 	 *       	"remark": "remark",
-	 *       	"images": "images",
-	 *       	"types": "types",
 	 *       	"create_at": "create_at",
 	 *       	"update_at": "update_at"
 	 *       }
@@ -266,14 +216,8 @@ class Ctrl{
 		}
 
 		const body = {
-			name  : req.body.name,
-			thumb : req.body.thumb,
-			price : req.body.price,
-			stock : req.body.stock,
-			spec  : req.body.spec,
+			name  : req.body.name, 
 			remark: req.body.remark, 
-			images: req.body.images, 
-			types : req.body.types, 
 		}
 
 		this.model.put(query, body)
@@ -285,13 +229,13 @@ class Ctrl{
 	}
 
 	/**
-	 * @api {delete} /goods/:id 删除某个指定资源
+	 * @api {delete} /classify/:id 删除某个指定资源
 	 * @apiDescription 删除某个指定资源
 	 * @apiName delete
-	 * @apiGroup goods
+	 * @apiGroup classify
 	 *
 	 * @apiParam {String} id 资源ID
-	 * @apiSampleRequest /goods/:id
+	 * @apiSampleRequest /classify/:id
 	 * 
 	 * @apiPermission none
 	 * 
@@ -320,79 +264,6 @@ class Ctrl{
 		})
 		.catch(err => next(err))
 	}
-
-	/**
-	 * @api {search} /goods/search/all 按关键词查询资源
-	 * @apiDescription 按关键词查询资源
-	 * @apiName search
-	 * @apiGroup goods
-	 *
-	 * @apiParam {String} keyword 关键词
-	 * @apiSampleRequest /goods/search/all
-	 * 
-	 * @apiPermission none
-	 * 
-	 * @apiUse Header
-	 * @apiUse Success
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "meta": {
-	 *       	"code": 0,
-	 *       	"message": "调用成功"
-	 *       },
-	 *       "data": [{
-	 *       	"_id": "_id",
-	 *       	"num": "num",
-	 *       }]
-	 *     }
-	 */
-	search(req, res, next) {
-		const keyword = req.query.keyword
-		const pattern = keyword && new RegExp(keyword)
-
-		this.model.model.aggregate([
-			{
-				$match: {
-					name: pattern
-				}
-			},
-			{
-				$group: {
-					_id: '$name',
-					num: {
-						$sum: 1
-					}
-				}
-			}
-		])
-		.then(doc => res.tools.setJson(0, '调用成功', doc))
-		.catch(err => next(err))
-	}
-
-    classify(req,res,next) {
-        const query = {types: req.params.id}
-
-        const fields = {}
-
-        const options = {
-            page: req.query.page,
-            limit: req.query.limit,
-        }
-
-        Promise.all([
-            this.model.countAsync(query),
-            this.model.getAll(query, fields, options),
-        ])
-            .then(docs => {
-                res.tools.setJson(0, '调用成功', {
-                    items: docs[1],
-                    paginate: res.paginate(Number(options.page), Number(options.limit), docs[0]),
-                })
-            })
-            .catch(err => next(err))
-    }
 }
 
 export default Ctrl

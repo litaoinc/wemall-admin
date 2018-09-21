@@ -7,7 +7,7 @@ export default {
 	setToken(id) {
 		return jwt.sign({
 			id: id
-		}, this.TOKEN_SECRET, { 
+		}, this.TOKEN_SECRET, {
 			expiresIn: 60 * 60
 		})
 	},

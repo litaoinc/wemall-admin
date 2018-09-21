@@ -70,15 +70,10 @@ app.use((req, res, next) => {
 	return next()
 })
 
-// index
-// app.get('/', (req, res) => {
-// 	res.render('index')
-// })
-
 // custom middleware
 app.use(/\/api/, tools)
 app.use(/^((?!sign\/up|sign\/in|captcha).)+$/, [
-	jwt({ secret: config.secret}), 
+	jwt({ secret: config.secret}),
 	auth.verifyToken.bind(auth)
 ])
 
@@ -89,8 +84,6 @@ routes(app)
 app.use((req, res, next) => {
 	const err = new Error('Not Found')
 	err.status = 404
-	// res.status(404)
-	// res.send('Not Found')
 	next(err)
 })
 
@@ -120,7 +113,5 @@ app.use((err, req, res, next) => {
 		error: err
 	})
 })
-
-// app.listen(3000, '0.0.0.0')
 
 export default app

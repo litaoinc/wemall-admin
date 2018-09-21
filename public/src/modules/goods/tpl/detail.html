@@ -15,6 +15,10 @@
                 </div>
             </div>
             <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">库存</label>
+                    <span class="weui-form-preview__value">{{ vm.goods.item.stock }}</span>
+                </div>
             	<div class="weui-form-preview__item" ng-repeat="item in vm.goods.item.types">
                     <label class="weui-form-preview__label">{{ item.name }}</label>
                     <span class="weui-form-preview__value">{{ item.remark }}</span>

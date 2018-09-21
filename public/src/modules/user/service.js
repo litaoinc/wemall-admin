@@ -18,6 +18,7 @@ class Service extends ServiceBase {
 	}
 
 	signIn(params) {
+		console.log("---------------------")
 		return this.postRequest(this.OBJ.signIn, params) 
 	}
 

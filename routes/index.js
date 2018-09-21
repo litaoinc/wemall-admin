@@ -8,6 +8,7 @@ import address from '../controllers/address'
 import order from '../controllers/order'
 import help from '../controllers/help'
 import user from '../controllers/user'
+import spec from "../controllers/spec"
 
 export default function(app) {
 	new common(app)
@@ -20,4 +21,5 @@ export default function(app) {
 	new order(app)
 	new help(app)
 	new user(app)
+	new spec(app)
 }

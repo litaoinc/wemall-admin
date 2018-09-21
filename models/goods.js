@@ -8,7 +8,10 @@ const Schema = mongoose.Schema({
 		ref : 'classify',
 	}],
 	name     : String,
+    thumb    : String,
 	price    : Number,
+	stock	 : Number,
+	spec     : Array,
 	remark   : String,
 	images   : Array,
 	create_at: {

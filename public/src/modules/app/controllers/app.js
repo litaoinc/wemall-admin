@@ -30,6 +30,20 @@ class Ctrl {
                 },
                 {
                     url: null,
+                    name: '规格模版',
+                    children: [
+                        {
+                            url: 'web.spec.list',
+                            name: '所有规格'
+                        },
+                        {
+                            url: 'web.spec.add',
+                            name: '添加规格'
+                        }
+                    ]
+                },
+                {
+                    url: null,
                     name: '商品管理',
                     children: [
                         {
@@ -87,6 +101,12 @@ class Ctrl {
                     icon: 'fa-rmb',
                     name: '分类管理',
                     url: 'web.classify.list',
+                    bg: '',
+                },
+                {
+                    icon: 'fa-rmb',
+                    name: '规格模版',
+                    url: 'web.spec.list',
                     bg: '',
                 },
                 {

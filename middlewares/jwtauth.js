@@ -38,10 +38,12 @@ class Middlewares{
 			.then(doc => {
 				if (!doc) return res.tools.setJson(1, '用户不存在')
 				Object.assign(req.user, {
-					_id     : doc._id, 
-					username: doc.username, 
-					avatar  : doc.avatar, 
+					_id     : doc._id,
+					username: doc.username,
+					avatar  : doc.avatar,
 				})
+
+				console.error(next)
 				return next()
 			})
 			.catch(err => next(err))

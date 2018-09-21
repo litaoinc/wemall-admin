@@ -8,11 +8,13 @@ import order from '../models/order'
 import help from '../models/help'
 import user from './user'
 import upload from './upload'
+import spec from '../models/spec'
 
 export default {
 	banner  : new RestBase(banner), 
-	classify: new RestBase(classify), 
-	goods   : new RestBase(goods), 
+	classify: new RestBase(classify),
+    spec    : new RestBase(spec),
+    goods   : new RestBase(goods),
 	cart    : new RestBase(cart), 
 	address : new RestBase(address), 
 	order   : new RestBase(order), 

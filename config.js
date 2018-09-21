@@ -31,7 +31,8 @@ export default {
 		'finished' : '已完成', 
 	},
 	wechat: {
-		appid: 'wx4ec54c44008298ec', 
-		secret: '8295e6dd753aab17624e0bb0e1c4e98d', 
+		appid: 'wxe79b05f970cb64b1',
+		secret: '392c345340435c9e9c2aa8443a6d6665',
 	},
+
 }

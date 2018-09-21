@@ -51,6 +51,6 @@ Ctrl.$inject = [
     '$window', 
 	'Notice', 
 	'UserService', 
-] 
+]
 
 export default Ctrl

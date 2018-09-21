@@ -27,7 +27,10 @@ class Ctrl extends RestBase{
                 this.form = {
                     id    : detail._id,
                     name  : detail.name,
+                    thumb : detail.thumb,
                     price : detail.price,
+                    stock : detail.stock,
+                    spec  : detail.spec,
                     remark: detail.remark,
                     images: detail.images,
                     types : detail.types,
@@ -41,7 +44,10 @@ class Ctrl extends RestBase{
         this.max  = 9
         this.categorys = []
         this.form = {
+            thumb : null,
             name  : null,
+            stock : null,
+            spec  : [],
             price : null,
             remark: null,
             images: [],

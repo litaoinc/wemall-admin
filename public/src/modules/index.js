@@ -6,6 +6,7 @@ import classify from './classify/index'
 import goods from './goods/index'
 import order from './order/index'
 import help from './help/index'
+import spec from './spec/index'
 
 angular
     .module('App', [
@@ -14,6 +15,7 @@ angular
         user.name,
         banner.name,
         classify.name,
+        spec.name,
         goods.name,
         order.name,
         help.name,
